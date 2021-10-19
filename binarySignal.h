@@ -17,6 +17,7 @@ namespace Prog3A
     private:
         static const int SZ = 100;
         static const int MAX = 255;
+        int m_lgth;
         int m_cnt;
         Status sq[SZ];
     public:
@@ -31,7 +32,10 @@ namespace Prog3A
         void remove(int prd);
 
         void printDebug() const;
+
         static int getSZ();
+        int getM_CNT() const;
+        int getM_LGHT() const;
     };
 
 }
