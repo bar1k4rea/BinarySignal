@@ -14,6 +14,7 @@ int main()
 
     tmp1.insert(0, tmp2);
     tmp1.printDebug();
+    std::cout << tmp1;
 
 
 //    tmp1.printDebug();

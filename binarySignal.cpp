@@ -128,17 +128,6 @@ namespace Prog3A {
         *this = begin;
     }
 
-//        if (prd > m_cnt)
-//            throw std::length_error("Illegal size for binary signal, because prd > m_cnt!");
-//        if (m_cnt + ptr.m_cnt > SZ)
-//            throw std::length_error("Illegal size for binary signal, because m_cnt > SZ!");
-//        int j = 0;
-//        for (int i = m_cnt - 1; i > prd - 1; i--, j++)
-//            sq[i + ptr.m_cnt] = sq[i];
-//        for (int i = 0; i < ptr.m_cnt; i++)
-//            sq[i + prd] = ptr.sq[i];
-//        m_cnt += ptr.m_cnt;
-
     void BinarySignal::copy(int n) {
         BinarySignal tmp = *this;
         for (int i = 0; i < n - 1; i++)
@@ -147,6 +136,19 @@ namespace Prog3A {
 
     void BinarySignal::remove(int prd) {
 
+    }
+
+    void operator>>(std::istream &in, BinarySignal &ptr) {
+
+    }
+
+    void operator<<(std::ostream &out, const BinarySignal &ptr) {
+        out << "Binary Signal: ->";
+        for (int i = 0; i < ptr.m_cnt; i++) {
+            for (int j = 0; j < ptr.sq[i].m_val; j++)
+                out << ptr.sq[i].m_lvl;
+        }
+        out << std::endl;
     }
 
     void BinarySignal::printDebug() const {
@@ -225,3 +227,15 @@ namespace Prog3A {
 //            for (int j = 0; j < m_cnt; j++)
 //                sq[j + m_cnt * i] = sq[j];
 //        m_cnt *= n;
+
+/*  Простая вставка */
+//        if (prd > m_cnt)
+//            throw std::length_error("Illegal size for binary signal, because prd > m_cnt!");
+//        if (m_cnt + ptr.m_cnt > SZ)
+//            throw std::length_error("Illegal size for binary signal, because m_cnt > SZ!");
+//        int j = 0;
+//        for (int i = m_cnt - 1; i > prd - 1; i--, j++)
+//            sq[i + ptr.m_cnt] = sq[i];
+//        for (int i = 0; i < ptr.m_cnt; i++)
+//            sq[i + prd] = ptr.sq[i];
+//        m_cnt += ptr.m_cnt;

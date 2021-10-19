@@ -31,8 +31,10 @@ namespace Prog3A
         void copy(int n);
         void remove(int prd);
 
-        void printDebug() const;
+        friend void operator>>(std::istream &in, BinarySignal &ptr);
+        friend void operator<<(std::ostream &out, const BinarySignal &ptr);
 
+        void printDebug() const;
         static int getSZ();
         int getM_CNT() const;
         int getM_LGHT() const;
