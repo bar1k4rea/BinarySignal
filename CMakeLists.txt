@@ -3,4 +3,4 @@ project(BinarySignal)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(BinarySignal main.cpp binarySignal.cpp binarySignal.h)
+add_executable(BinarySignal main.cpp binarySignal.cpp binarySignal.h menu.cpp menu.h)

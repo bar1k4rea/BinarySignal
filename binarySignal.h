@@ -33,6 +33,11 @@ namespace Prog3A
 
         friend void operator>>(std::istream &in, BinarySignal &ptr);
         friend void operator<<(std::ostream &out, const BinarySignal &ptr);
+        void operator+=(const BinarySignal &ptr);
+        void operator*=(int n);
+        BinarySignal& operator~();
+
+
 
         void printDebug() const;
         static int getSZ();

@@ -127,6 +127,8 @@ namespace Prog3A {
     }
 
     void BinarySignal::remove(int start, int prd) {
+        if (start + prd > m_lgth)
+            throw std::length_error("Illegal size for binary signal, because prd > m_lght!");
         int k = 0, q = 0, i;
         BinarySignal begin, end, tmp = *this;
         for (i = 0; i < m_cnt; i++) {
@@ -179,12 +181,23 @@ namespace Prog3A {
         out << std::endl;
     }
 
+    void BinarySignal::operator+=(const BinarySignal &ptr) {
+        add(ptr);
+    }
+
+    void BinarySignal::operator*=(int n) {
+        copy(n);
+    }
+
+    BinarySignal& BinarySignal::operator~() {
+        inversion();
+    }
+
     void BinarySignal::printDebug() const {
         for (int i = 0; i < m_cnt; i++)
             std::cout << "#" << i << ": " << sq[i].m_lvl << " -> " << static_cast<int>(sq[i].m_val) << std::endl;
         std::cout << std::endl;
     }
-
 
     int BinarySignal::getSZ() {
         return SZ;

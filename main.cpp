@@ -1,49 +1,64 @@
-#include "binarySignal.h"
+#include "menu.h"
+
 
 int main()
 {
-    char str1[10] = "000111001";
-    char str2[4] = "010";
-    int sz;
-    Prog3A::BinarySignal tmp1(10, str1);
-    Prog3A::BinarySignal tmp2(4, str2);
-    Prog3A::BinarySignal tmp3(3);
+    int command;
+    Prog3A::BinarySignal tmp;
 
-    std::cout << tmp1;
-    tmp1.remove(4, 3);
-    std::cout << tmp1;
-
-//    std::cin >> sz;
-//    char sq[sz];
-//    std::cin >> sq[sz];
-//    for (int i = 0; i < sz; i++)
-//        std::cout << sq[i];
-
-//    std::cin >> tmp3;
-//    std::cout << tmp3;
-
-//    tmp1.printDebug();
-//    std::cout << "CNT: -> " << tmp1.getM_CNT() << std::endl  << "LGTH: -> "<< tmp1.getM_LGHT()<< std::endl;
-//    tmp2.printDebug();
-//    std::cout << "CNT: -> " << tmp2.getM_CNT() << std::endl  << "LGTH: -> "<< tmp2.getM_LGHT()<< std::endl;
-//
-//    tmp1.insert(0, tmp2);
-//    tmp1.printDebug();
-//    std::cout << tmp1;
-
-
-//    tmp1.printDebug();
-//    std::cout << "CNT: -> " << tmp1.getM_CNT() << std::endl << std::endl;
-//    tmp2.printDebug();
-//    std::cout << "CNT: -> " << tmp2.getM_CNT() << std::endl  << "LGTH: -> "<< tmp2.getM_LGHT()<< std::endl;
-//
-//    tmp2.copy(10);
-//
-//    tmp2.printDebug();
-//    std::cout << "CNT: -> " << tmp2.getM_CNT() << std::endl  << "LGTH: -> "<< tmp2.getM_LGHT()<< std::endl;
-//    tmp1.add(tmp2);
-//    tmp1.printDebug();
-//    std::cout << "CNT: -> " << tmp1.getM_CNT() << std::endl << std::endl;
+    std::cout << "0. Exit" << std::endl;
+    std::cout << "1. Empty constructor" << std::endl;
+    std::cout << "2. Creating a binary signal with a single element" << std::endl;
+    std::cout << "3. Creating a binary signal with multiple elements" << std::endl;
+    std::cout << "4. Input a binary signal" << std::endl;
+    std::cout << "5. Output a binary signal" << std::endl;
+    std::cout << "6. Combining two binary signal" << std::endl;
+    std::cout << "7. Inversion a binary signal" << std::endl;
+    std::cout << "8. Insert binary signal" << std::endl;
+    std::cout << "9. Remove binary signal" << std::endl;
+    std::cout << "10. Add binary signal" << std::endl;
+    do {
+        std::cout << "Enter the command: ->";
+        getNum(command);
+        switch(command)
+        {
+            case 0:
+                std::cout << "EXIT!" << std::endl;
+                break;
+            case 1:
+                emptyConstructor(&tmp);
+                break;
+            case 2:
+                firstConstructor(&tmp);
+                break;
+            case 3:
+                secondConstructor(&tmp);
+                break;
+            case 4:
+                inputSequence(&tmp);
+                break;
+            case 5:
+                outputSequence(tmp);
+                break;
+            case 6:
+                copyBinarySignal(&tmp);;
+                break;
+            case 7:
+                inversionBinarySignal(&tmp);
+                break;
+            case 8:
+                insertBinarySignal(&tmp);
+                break;
+            case 9:
+                removeBinarySignal(&tmp);
+                break;
+            case 10:
+                addBinarySignal(&tmp);
+                break;
+            default:
+                std::cout << "ERROR! There is no such command." << std::endl;
+        }
+    } while (command != 0);
 
     return 0;
 }
