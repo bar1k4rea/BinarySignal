@@ -1,5 +1,4 @@
 #include "binarySignal.h"
-#define DEBUG
 
 namespace Prog3A {
     BinarySignal::BinarySignal() {
@@ -23,12 +22,6 @@ namespace Prog3A {
         m_cnt = 0;
         if (sz > SZ * MAX)
             throw std::length_error("Illegal size for binary signal!");
-#ifdef DEBUG
-        std::cout << "Entered string: ";
-        for (int i = 0; i < sz; i++)
-            std::cout << str[i] << " ";
-        std::cout << std::endl;
-#endif //DEBUG
         for (int i = 0; i < sz - 1;) {
             if (m_cnt > SZ)
                 throw std::length_error("Illegal size for binary signal, because m_cnt > SZ!");
@@ -90,7 +83,6 @@ namespace Prog3A {
     void BinarySignal::insert(int prd, const BinarySignal &ptr) {
         if (prd > m_lgth)
             throw std::length_error("Illegal size for binary signal, because prd > m_lght!");
-        int k = 0, i;
         BinarySignal begin, end, tmp = *this;
         if (prd == 0) {
             begin = ptr;
@@ -102,6 +94,7 @@ namespace Prog3A {
             add(ptr);
             return;
         }
+        int k = 0, i;
         for (i = 0; i < m_cnt; i++) {
             k += sq[i].m_val;
             if (k > prd - 1)
@@ -112,8 +105,7 @@ namespace Prog3A {
         tmp.sq[i].m_val -= k - prd;
         begin = tmp;
         begin.add(ptr);
-        begin.printDebug();
-        if (k - prd == 0) {
+        if (k == prd) {
             end.m_cnt = m_cnt - tmp.m_cnt;
             for (i = 0; i < end.m_cnt; i++)
                 end.sq[i] = sq[i + tmp.m_cnt];
@@ -134,16 +126,52 @@ namespace Prog3A {
             this->add(tmp);
     }
 
-    void BinarySignal::remove(int prd) {
-
-    }
+    void BinarySignal::remove(int start, int prd) {
+        int k = 0, q = 0, i;
+        BinarySignal begin, end, tmp = *this;
+        for (i = 0; i < m_cnt; i++) {
+            k += sq[i].m_val;
+            if (k > start - 1)
+                break;
+        }
+        tmp.m_cnt = i + 1;
+        tmp.m_lgth = start;
+        tmp.sq[i].m_val -= k - start;
+        begin = tmp;
+        std::cout << begin;
+        for (i = 0; i < m_cnt; i++) {
+            q += sq[i].m_val;
+            if (q > start + prd - 1)
+                break;
+        }
+        int s = i;
+        if (q == start + prd) {
+            end.m_cnt = m_cnt - s - 1;
+            for (i = 0; i < end.m_cnt; i++)
+                end.sq[i] = sq[i + tmp.m_cnt];
+        } else {
+            end.m_cnt = m_cnt - i;
+            for (i = 0; i < end.m_cnt; i++)
+                end.sq[i] = sq[i + s];
+            end.sq[0].m_val = q - start - prd;
+        }
+        end.m_lgth = m_lgth - begin.m_lgth - prd;
+        begin.add(end);
+        *this = begin;
+}
 
     void operator>>(std::istream &in, BinarySignal &ptr) {
-
+        int sz;
+        in >> sz;
+        char sq[sz + 1];
+        for (int i = 0; i < sz; i++)
+            in >> sq[i];
+        Prog3A::BinarySignal tmp(sz + 1, sq);
+        ptr = tmp;
     }
 
     void operator<<(std::ostream &out, const BinarySignal &ptr) {
-        out << "Binary Signal: ->";
+        out << "Binary Signal: -> ";
         for (int i = 0; i < ptr.m_cnt; i++) {
             for (int j = 0; j < ptr.sq[i].m_val; j++)
                 out << ptr.sq[i].m_lvl;

@@ -29,7 +29,7 @@ namespace Prog3A
         void add(const BinarySignal &ptr);
         void insert(int prd, const BinarySignal &ptr);
         void copy(int n);
-        void remove(int prd);
+        void remove(int start, int prd);
 
         friend void operator>>(std::istream &in, BinarySignal &ptr);
         friend void operator<<(std::ostream &out, const BinarySignal &ptr);
