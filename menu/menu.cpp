@@ -1,30 +1,31 @@
 #include "menu.h"
 
 // 1. Пустой конструктор
-void emptyConstructor(Prog3A::BinarySignal *ptr) {
-    Prog3A::BinarySignal tmp;
+void emptyConstructor(BS::BinarySignal *ptr) {
+    BS::BinarySignal tmp;
     *ptr = tmp;
 }
 
 // 2. Первый констурктор
-void firstConstructor(Prog3A::BinarySignal *ptr) {
+void firstConstructor(BS::BinarySignal *ptr) {
     bool el;
     std::cout << "Enter element of the binary signal: ->";
     getNum(el);
-    Prog3A::BinarySignal tmp(el);
+    BS::BinarySignal tmp(el);
     *ptr = tmp;
 }
 
 // 3.
-void secondConstructor(Prog3A::BinarySignal *ptr) {
+void secondConstructor(BS::BinarySignal *ptr) {
     int sz;
     std::cout << "Enter the number of elements in the binary signal: ->";
-    getPositiveNum(sz);
-    char sq[sz + 1];
+//    getPositiveNum(sz);
+    std::cin >> sz;
+    bool sq[sz];
     for (int i = 0; i < sz; i++)
         std::cin >> sq[i];
     try {
-        Prog3A::BinarySignal tmp(sz + 1, sq);
+        BS::BinarySignal tmp(sz + 1, sq);
         *ptr = tmp;
     }
     catch (std::length_error &le) {
@@ -36,23 +37,23 @@ void secondConstructor(Prog3A::BinarySignal *ptr) {
 }
 
 // 4.
-void inputSequence(Prog3A::BinarySignal *ptr)
+void inputSequence(BS::BinarySignal *ptr)
 {
     std::cin >> *ptr;
 }
 
 // 5.
-void outputSequence(Prog3A::BinarySignal ptr) {
-    std::cout << ptr;
+void outputSequence(BS::BinarySignal ptr) {
+    std::cout << ptr << std::endl;
 }
 
 // 6.
-void copyBinarySignal(Prog3A::BinarySignal *ptr) {
+void copyBinarySignal(BS::BinarySignal *ptr) {
     int n;
     std::cout << "Enter n: ->";
     getNum(n);
     try {
-        ptr->copy(n);
+        ptr->copying(n);
         //    *ptr *= n;
     }
     catch (std::length_error &le) {
@@ -61,15 +62,15 @@ void copyBinarySignal(Prog3A::BinarySignal *ptr) {
 }
 
 // 7.
-void inversionBinarySignal(Prog3A::BinarySignal *ptr) {
-    ptr->inversion();
+void inversionBinarySignal(BS::BinarySignal *ptr) {
+    ptr->inverting();
     //    ~*ptr;
 }
 
 // 8.
-void insertBinarySignal(Prog3A::BinarySignal *ptr) {
+void insertBinarySignal(BS::BinarySignal *ptr) {
     int prd;
-    Prog3A::BinarySignal tmp;
+    BS::BinarySignal tmp;
     std::cin >> tmp;
     std::cout << "Enter the period: ->";
     getPositiveNum(prd);
@@ -82,7 +83,7 @@ void insertBinarySignal(Prog3A::BinarySignal *ptr) {
 }
 
 // 9.
-void removeBinarySignal(Prog3A::BinarySignal *ptr) {
+void removeBinarySignal(BS::BinarySignal *ptr) {
     int start, prd;
     std::cout << "Enter the start: ->";
     getPositiveNum(start);
@@ -97,11 +98,11 @@ void removeBinarySignal(Prog3A::BinarySignal *ptr) {
 }
 
 // 10.
-void addBinarySignal(Prog3A::BinarySignal *ptr) {
-    Prog3A::BinarySignal tmp;
+void addBinarySignal(BS::BinarySignal *ptr) {
+    BS::BinarySignal tmp;
     std::cin >> tmp;
     try {
-        ptr->add(tmp);
+        ptr->addition(tmp);
         //    *ptr += tmp;
     }
     catch (std::length_error &le) {
