@@ -3,17 +3,17 @@
 
 namespace BS {
     // Пустой конструктор.
-    BinarySignal::BinarySignal() noexcept: m_number(0), m_length(0), m_array{} {
+    BinarySignal::BinarySignal() noexcept: m_size(0), m_length(0), m_array{} {
 
     }
 
     // Первый конструктор.
-    BinarySignal::BinarySignal(bool lvl) noexcept: m_number(SZ), m_length(MAX), m_array{lvl, MAX} {
+    BinarySignal::BinarySignal(bool lvl) noexcept: m_size(SZ), m_length(MAX), m_array{lvl, MAX} {
 
     }
 
     // Второй конструктор.
-    BinarySignal::BinarySignal(int sz, const bool *sgn) : m_number(0), m_length(sz), m_array{} {
+    BinarySignal::BinarySignal(int sz, const bool *sgn) : m_size(0), m_length(sz), m_array{} {
         initialization(sz, sgn);
     }
 
@@ -21,28 +21,28 @@ namespace BS {
     void BinarySignal::initialization(int sz, const bool *sgn) {
         int cnt = 0;
         for (int i = 0; i < sz;) {
-            if (m_number > SZ - 1)
-                throw std::length_error("Illegal size for binary signal, because m_number > SZ!");
+            if (m_size > SZ - 1)
+                throw std::length_error("Illegal size for binary signal, because m_size > SZ!");
             if (!sgn[i]) {
-                m_array[m_number].m_level = false;
+                m_array[m_size].m_level = false;
                 while (!sgn[i] && i < sz) {
                     cnt++;
                     i++;
                     if (cnt > MAX)
                         throw std::length_error("Illegal size for binary signal, because m_duration > MAX!");
                 }
-                m_array[m_number].m_duration = cnt;
+                m_array[m_size].m_duration = cnt;
             } else {
-                m_array[m_number].m_level = true;
+                m_array[m_size].m_level = true;
                 while (sgn[i] && i < sz) {
                     cnt++;
                     i++;
                     if (cnt > MAX)
                         throw std::length_error("Illegal size for binary signal, because m_duration > MAX!");
                 }
-                m_array[m_number].m_duration = cnt;
+                m_array[m_size].m_duration = cnt;
             }
-            m_number++;
+            m_size++;
             cnt = 0;
         }
     }
@@ -60,10 +60,10 @@ namespace BS {
 
     // Вывод.
     std::ostream &operator<<(std::ostream &out, const BinarySignal &bs) noexcept {
-        if (!bs.m_number)
+        if (!bs.m_size)
             out << "Binary Signal is empty!";
         else {
-            for (int i = 0; i < bs.m_number; i++)
+            for (int i = 0; i < bs.m_size; i++)
                 for (int j = 0; j < bs.m_array[i].m_duration; j++)
                     out << bs.m_array[i].m_level;
         }
@@ -72,32 +72,32 @@ namespace BS {
 
     // Инвертирование.
     BinarySignal &BinarySignal::inverting() noexcept {
-        for (int i = 0; i < m_number; i++)
+        for (int i = 0; i < m_size; i++)
             m_array[i].m_level = !m_array[i].m_level;
         return *this;
     }
 
     // Дополнение.
     BinarySignal &BinarySignal::addition(const BinarySignal &bs) {
-        if (!bs.m_number);
-        else if (!m_number)
+        if (!bs.m_size);
+        else if (!m_size)
             *this = bs;
         else {
-            if (m_array[m_number - 1].m_level == bs.m_array[0].m_level) {
-                if (m_number + bs.m_number - 1 > SZ)
-                    throw std::length_error("Illegal size for binary signal, because m_number > SZ!");
-                if (m_array[m_number - 1].m_duration + bs.m_array[0].m_duration > MAX)
+            if (m_array[m_size - 1].m_level == bs.m_array[0].m_level) {
+                if (m_size + bs.m_size - 1 > SZ)
+                    throw std::length_error("Illegal size for binary signal, because m_size > SZ!");
+                if (m_array[m_size - 1].m_duration + bs.m_array[0].m_duration > MAX)
                     throw std::length_error("Illegal size for binary signal, because m_duration > MAX!");
-                m_array[m_number - 1].m_duration += bs.m_array[0].m_duration;
-                for (int i = 0; i < bs.m_number - 1; i++)
-                    m_array[i + m_number] = bs.m_array[i + 1];
-                m_number += bs.m_number - 1;
+                m_array[m_size - 1].m_duration += bs.m_array[0].m_duration;
+                for (int i = 0; i < bs.m_size - 1; i++)
+                    m_array[i + m_size] = bs.m_array[i + 1];
+                m_size += bs.m_size - 1;
             } else {
-                if (m_number + bs.m_number > SZ)
-                    throw std::length_error("Illegal size for binary signal, because m_number > SZ!");
-                for (int i = 0; i < bs.m_number; i++)
-                    m_array[i + m_number] = bs.m_array[i];
-                m_number += bs.m_number;
+                if (m_size + bs.m_size > SZ)
+                    throw std::length_error("Illegal size for binary signal, because m_size > SZ!");
+                for (int i = 0; i < bs.m_size; i++)
+                    m_array[i + m_size] = bs.m_array[i];
+                m_size += bs.m_size;
             }
             m_length += bs.m_length;
         }
@@ -114,97 +114,97 @@ namespace BS {
 
     // Отладка.
     void BinarySignal::debugging() const {
-        for (int i = 0; i < m_number; i++)
+        for (int i = 0; i < m_size; i++)
             std::cout << "#" << i << ": " << m_array[i].m_level << " -> " << static_cast<int>(m_array[i].m_duration) << std::endl;
     }
 
     // Вставка.
     BinarySignal &BinarySignal::insert(int start, const BinarySignal &bs) {
-        if (m_number + bs.m_number > SZ)
-            throw std::length_error("Illegal size for binary signal, because m_number > SZ!");
+        if (start < 0 || start > m_length)
+            throw std::invalid_argument("Illegal value for start!");
 
-        int counter = 0, length = 0;
-
-
-        for (int i = 0; i < m_number; i++) {
-            length += m_array[i].m_duration;
-            if (length > start) {
-                counter = i;
-                break;
+        if (!bs.m_size); // вставляемый сигнал - пустой
+        else if (!m_size) // исходный сигнал - пустой
+            *this = bs;
+        else if (!start) { // вставляем в начало
+            if (m_size + bs.m_size > SZ)
+                throw std::length_error("Illegal size for binary signal, because m_size > SZ!");
+            for (int i = m_size - 1; i > -1; i--)
+                m_array[i + bs.m_size] = m_array[i];
+            for (int i = 0; i < bs.m_size; i++)
+                m_array[i] = bs.m_array[i];
+            m_length += bs.m_length;
+        }
+        else if (start == m_length) // вставляем в конец
+            addition(bs);
+        else { // вставяем в середину
+            int counter = 0, length = 0;
+            for (int i = 0; i < m_size; i++) {
+                length += m_array[i].m_duration;
+                if (length > start) {
+                    counter = i;
+                    break;
+                }
             }
-        }
-
-        std::cout << static_cast<int>(m_array[counter].m_duration) << std::endl;
-        std::cout << start << std::endl;
-        std::cout << length << std::endl;
-        std::cout << counter << std::endl;
-
-        if (m_array[counter].m_duration == length - start)  {
-            for (int i = m_number - 1; i > counter - 1; i--)
-                m_array[i + bs.m_number] = m_array[i];
-            for (int i = 0; i < bs.m_number; i++)
-                m_array[i + counter] = bs.m_array[i];
-            m_number += bs.m_number;
+            if (m_array[counter].m_duration == length - start)  {
+                if (m_size + bs.m_size > SZ)
+                    throw std::length_error("Illegal size for binary signal, because m_size > SZ!");
+                for (int i = m_size - 1; i > counter - 1; i--)
+                    m_array[i + bs.m_size] = m_array[i];
+                for (int i = 0; i < bs.m_size; i++)
+                    m_array[i + counter] = bs.m_array[i];
+                m_size += bs.m_size;
+            }
+            else {
+                if (m_size + bs.m_size + 1 > SZ)
+                    throw std::length_error("Illegal size for binary signal, because m_size > SZ!");
+                m_array[counter].m_duration = m_array[counter].m_duration - length + start;
+                for (int i = m_size - 1; i > counter - 1; i--)
+                    m_array[i + bs.m_size + 1] = m_array[i];
+                m_array[counter + bs.m_size + 1].m_duration = length - start;
+                for (int i = 0; i < bs.m_size; i++)
+                    m_array[i + counter + 1] = bs.m_array[i];
+                m_size += bs.m_size + 1;
+            }
             m_length += bs.m_length;
         }
-        else {
-            int val = m_array[counter].m_duration;
-            for (int i = m_number - 1; i > counter - 1; i--)
-                m_array[i + bs.m_number + 1] = m_array[i];
-            m_array[counter + bs.m_number + 1].m_duration = length - start;
-            for (int i = 0; i < bs.m_number; i++)
-                m_array[i + counter + 1] = bs.m_array[i];
-            m_array[counter].m_duration = val - length + start;
-            m_number += bs.m_number + 1;
-            m_length += bs.m_length;
-        }
-
         return *this;
     }
 
-//    std::cout << static_cast<int>(m_array[counter].m_duration) << std::endl;
-//        std::cout << start << std::endl;
-//        std::cout << length << std::endl;
-//        std::cout << counter << std::endl;
+    // Удаление
+    void BinarySignal::remove(int start, int duration) {
+        if (start < 0 || duration < 0 || start + duration > m_length)
+            throw std::invalid_argument("Illegal value for start or duration!");
 
-
-//        if (prd > m_length)
-//            throw std::length_error("Illegal size for binary signal, because prd > m_lght!");
-//        BinarySignal begin, end, tmp = *this;
-//        if (prd == 0) {
-//            begin = bs;
-//            begin.addition(*this);
-//            *this = begin;
-//            return;
-//        }
-//        if (prd == m_length) {
-//            addition(bs);
-//            return;
-//        }
-//        int k = 0, i;
-//        for (i = 0; i < m_number; i++) {
-//            k += m_array[i].m_duration;
-//            if (k > prd - 1)
-//                break;
-//        }
-//        tmp.m_number = i + 1;
-//        tmp.m_length = prd;
-//        tmp.m_array[i].m_duration -= k - prd;
-//        begin = tmp;
-//        begin.addition(bs);
-//        if (k == prd) {
-//            end.m_number = m_number - tmp.m_number;
-//            for (i = 0; i < end.m_number; i++)
-//                end.m_array[i] = m_array[i + tmp.m_number];
-//        } else {
-//            end.m_number = m_number - tmp.m_number + 1;
-//            for (i = 0; i < end.m_number; i++)
-//                end.m_array[i] = m_array[i + tmp.m_number - 1];
-//            end.m_array[0].m_duration = k - prd;
-//        }
-//        end.m_length = m_length - prd;
-//        begin.addition(end);
-//        *this = begin;
+        if (!duration); // длительность равна нулю, ничего не удаляем
+        else if (start + duration == m_length && !start) { // удаляем весь бинарный сигнал
+            m_size = 0;
+            m_length = 0;
+            *m_array = {};
+        }
+        else if (start + duration == m_length) { // удаление с конца.
+            int counter = 0, length = 0;
+            for (int i = 0; i < m_size; i++) {
+                length += m_array[i].m_duration;
+                if (length > start) {
+                    counter = i;
+                    break;
+                }
+            }
+            if (m_array[counter].m_duration == length - start) {
+                for (int i = counter; i < m_size; i++)
+                    m_array[i] = {};
+                m_size = counter;
+                m_length = start;
+            }
+            else {
+                m_array[counter].m_duration = length - start;
+                for (int i = counter + 1; i < m_size; i++)
+                    m_array[i] = {};
+                m_size = counter + 1;
+                m_length = start;
+            }
+        }
 
 
 
@@ -212,38 +212,37 @@ namespace BS {
 
 
 
-    void BinarySignal::remove(int start, int prd) {
-        if (start + prd > m_length)
-            throw std::length_error("Illegal size for binary signal, because prd > m_lght!");
+        if (start + duration > m_length)
+            throw std::length_error("Illegal size for binary signal, because duration > m_lght!");
         int k = 0, q = 0, i;
         BinarySignal begin, end, tmp = *this;
-        for (i = 0; i < m_number; i++) {
+        for (i = 0; i < m_size; i++) {
             k += m_array[i].m_duration;
             if (k > start - 1)
                 break;
         }
-        tmp.m_number = i + 1;
+        tmp.m_size = i + 1;
         tmp.m_length = start;
         tmp.m_array[i].m_duration -= k - start;
         begin = tmp;
         std::cout << begin;
-        for (i = 0; i < m_number; i++) {
+        for (i = 0; i < m_size; i++) {
             q += m_array[i].m_duration;
-            if (q > start + prd - 1)
+            if (q > start + duration - 1)
                 break;
         }
         int s = i;
-        if (q == start + prd) {
-            end.m_number = m_number - s - 1;
-            for (i = 0; i < end.m_number; i++)
-                end.m_array[i] = m_array[i + tmp.m_number];
+        if (q == start + duration) {
+            end.m_size = m_size - s - 1;
+            for (i = 0; i < end.m_size; i++)
+                end.m_array[i] = m_array[i + tmp.m_size];
         } else {
-            end.m_number = m_number - i;
-            for (i = 0; i < end.m_number; i++)
+            end.m_size = m_size - i;
+            for (i = 0; i < end.m_size; i++)
                 end.m_array[i] = m_array[i + s];
-            end.m_array[0].m_duration = q - start - prd;
+            end.m_array[0].m_duration = q - start - duration;
         }
-        end.m_length = m_length - begin.m_length - prd;
+        end.m_length = m_length - begin.m_length - duration;
         begin.addition(end);
         *this = begin;
     }
@@ -275,7 +274,7 @@ namespace BS {
     }
 
     int BinarySignal::getM_CNT() const {
-        return m_number;
+        return m_size;
     }
 
     int BinarySignal::getM_LGHT() const {
@@ -286,10 +285,10 @@ namespace BS {
 
 /*    Дополнение сигнала другим сигналом с помощью строки */
 //    void BinarySignal::addition(const BinarySignal &ptr) {
-//        int sz = MAX * (m_number + ptr.m_number), k = 0;
+//        int sz = MAX * (m_size + ptr.m_size), k = 0;
 //        char str[sz];
 //
-//        for (int i = 0; i < m_number; i++) {
+//        for (int i = 0; i < m_size; i++) {
 //            if (m_array[i].m_level)
 //                for (int j = 0; j < m_array[i].m_duration; j++)
 //                    str[j + k] = '1';
@@ -298,7 +297,7 @@ namespace BS {
 //                    str[j + k] = '0';
 //            k += m_array[i].m_duration;
 //        }
-//        for (int i = 0; i < ptr.m_number; i++) {
+//        for (int i = 0; i < ptr.m_size; i++) {
 //            if (ptr.m_array[i].m_level)
 //                for (int j = 0; j < ptr.m_array[i].m_duration; j++)
 //                    str[j + k] = '1';
@@ -313,85 +312,85 @@ namespace BS {
 
 
 /*    Копирование двоичного сигнала (усложнённое) */
-//        if (m_number < 2) {
-//            if (n * m_number > SZ)
+//        if (m_size < 2) {
+//            if (n * m_size > SZ)
 //                throw std::length_error("Illegal size for binary signal, because m_duration > MAX!");
 //            m_array[0].m_duration *= n;
-//        } else if (m_array[0].m_level == m_array[m_number - 1].m_level) {
-//            if (m_number + (m_number - 1) * (n - 1)  > SZ)
-//                throw std::length_error("Illegal size for binary signal, because m_number > SZ!");
-//            if (m_array[0].m_duration + m_array[m_number - 1].m_duration > MAX)
+//        } else if (m_array[0].m_level == m_array[m_size - 1].m_level) {
+//            if (m_size + (m_size - 1) * (n - 1)  > SZ)
+//                throw std::length_error("Illegal size for binary signal, because m_size > SZ!");
+//            if (m_array[0].m_duration + m_array[m_size - 1].m_duration > MAX)
 //                throw std::length_error("Illegal size for binary signal, because m_duration > MAX!");
 //            BinarySignal tmp = *this;
 //            for (int i = 0; i < n - 1; i++)
 //                this->addition(tmp);
 //        } else {
 //            for (int i = 1; i < n; i++)
-//                for (int j = 0; j < m_number; j++)
-//                    m_array[j + m_number * i] = m_array[j];
-//            m_number *= n;
+//                for (int j = 0; j < m_size; j++)
+//                    m_array[j + m_size * i] = m_array[j];
+//            m_size *= n;
 //        }
 
 /*    Копирование двоичного сигнала (очень простое) */
-//            if (n * m_number > SZ)
-//            throw std::length_error("Illegal size for binary signal, because m_number > SZ!");
+//            if (n * m_size > SZ)
+//            throw std::length_error("Illegal size for binary signal, because m_size > SZ!");
 //        for (int i = 1; i < n; i++)
-//            for (int j = 0; j < m_number; j++)
-//                m_array[j + m_number * i] = m_array[j];
-//        m_number *= n;
+//            for (int j = 0; j < m_size; j++)
+//                m_array[j + m_size * i] = m_array[j];
+//        m_size *= n;
 
 /*  Простая вставка */
-//        if (prd > m_number)
-//            throw std::length_error("Illegal size for binary signal, because prd > m_number!");
-//        if (m_number + ptr.m_number > SZ)
-//            throw std::length_error("Illegal size for binary signal, because m_number > SZ!");
+//        if (prd > m_size)
+//            throw std::length_error("Illegal size for binary signal, because prd > m_size!");
+//        if (m_size + ptr.m_size > SZ)
+//            throw std::length_error("Illegal size for binary signal, because m_size > SZ!");
 //        int j = 0;
-//        for (int i = m_number - 1; i > prd - 1; i--, j++)
-//            m_array[i + ptr.m_number] = m_array[i];
-//        for (int i = 0; i < ptr.m_number; i++)
+//        for (int i = m_size - 1; i > prd - 1; i--, j++)
+//            m_array[i + ptr.m_size] = m_array[i];
+//        for (int i = 0; i < ptr.m_size; i++)
 //            m_array[i + prd] = ptr.m_array[i];
-//        m_number += ptr.m_number;
+//        m_size += ptr.m_size;
 
 
 /* Раньше это стояло во втором конструкторе */
 //        int cnt = 0;
 //        for (int i = 0; i < sz;) {
-//            if (m_number > SZ - 1)
-//                throw std::length_error("Illegal size for binary signal, because m_number > SZ!");
+//            if (m_size > SZ - 1)
+//                throw std::length_error("Illegal size for binary signal, because m_size > SZ!");
 //            if (!sgn[i]) {
-//                m_array[m_number].m_level = false;
+//                m_array[m_size].m_level = false;
 //                while (!sgn[i] && i < sz) {
 //                    cnt++;
 //                    i++;
 //                    if (cnt > MAX)
 //                        throw std::length_error("Illegal size for binary signal, because m_duration > MAX!");
 //                }
-//                m_array[m_number].m_duration = cnt;
+//                m_array[m_size].m_duration = cnt;
 //            } else {
-//                m_array[m_number].m_level = true;
+//                m_array[m_size].m_level = true;
 //                while (sgn[i] && i < sz) {
 //                    cnt++;
 //                    i++;
 //                    if (cnt > MAX)
 //                        throw std::length_error("Illegal size for binary signal, because m_duration > MAX!");
 //                }
-//                m_array[m_number].m_duration = cnt;
+//                m_array[m_size].m_duration = cnt;
 //            }
-//            m_number++;
+//            m_size++;
 //            cnt = 0;
 //        }
 
 
 /* оч странная вставка */
-//if (!bs.m_number);
+//if (!bs.m_size);
 //else if (!start) {
-//if (!m_number)
+//if (!m_size)
 //*this = bs;
 //else
-//if (m_array[0].m_level == bs.m_array[bs.m_number - 1].m_level) {
-//if (m_number + bs.m_number - 1 > SZ)
-//throw std::length_error("Illegal size for binary signal, because m_number > SZ!");
-//if (m_array[0].m_duration + bs.m_array[bs.m_number - 1].m_duration > MAX)
+//if (m_array[0].m_level == bs.m_array[bs.m_size - 1].m_level) {
+//if (m_size + bs.m_size - 1 > SZ)
+//throw std::length_error("Illegal size for binary signal, because m_size > SZ!");
+//if (m_array[0].m_duration + bs.m_array[bs.m_size - 1].m_duration > MAX)
 //throw std::length_error("Illegal size for binary signal, because m_duration > MAX!");
 //
 //}

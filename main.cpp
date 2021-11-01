@@ -23,7 +23,7 @@ int main() {
 //    std::cout << bs1 << std::endl;
 //    bs1.debugging();
 
-    bs4.insert(2, bs1);
+    bs4.insert(1, bs1);
     std::cout << bs4 << std::endl;
     bs4.debugging();
     return 0;

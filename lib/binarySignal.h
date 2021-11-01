@@ -14,7 +14,7 @@ namespace BS {
         static const int SZ = 10;
         static const int MAX = 255;
         int m_length;
-        int m_number;
+        int m_size;
         Status m_array[SZ];
 
         void initialization(int sz, const bool *sgn);
@@ -38,7 +38,7 @@ namespace BS {
 
         BinarySignal &insert(int start, const BinarySignal &bs);
 
-        void remove(int start, int prd);
+        void remove(int start, int duration);
 
         void operator+=(const BinarySignal &ptr);
 
