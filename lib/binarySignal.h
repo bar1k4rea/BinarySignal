@@ -11,7 +11,7 @@ namespace BS {
 
     class BinarySignal {
     private:
-        static const int SZ = 10;
+        static const int SZ = 100;
         static const int MAX = 255;
         int m_length;
         int m_size;

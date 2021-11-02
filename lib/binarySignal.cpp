@@ -191,6 +191,7 @@ namespace BS {
                     break;
                 }
             }
+
             if (m_array[counter].m_duration == length - start) {
                 for (int i = counter; i < m_size; i++)
                     m_array[i] = {};
@@ -198,53 +199,94 @@ namespace BS {
                 m_length = start;
             }
             else {
-                m_array[counter].m_duration = length - start;
+                m_array[counter].m_duration = m_array[counter].m_duration - length + start;
                 for (int i = counter + 1; i < m_size; i++)
                     m_array[i] = {};
                 m_size = counter + 1;
                 m_length = start;
             }
         }
+        else if (!start) { // удаление с начала
+            int counter = 0, length = 0;
+            for (int i = 0; i < m_size; i++) {
+                length += m_array[i].m_duration;
+                if (length > duration) {
+                    counter = i;
+                    break;
+                }
+            }
+//            std::cout << counter << " " << length << " " << static_cast<int>(m_array[counter].m_duration) << std::endl;
+            if (m_array[counter].m_duration == length - duration) {
+                m_size -= counter;
+                m_length -= duration;
+                for (int i = 0; i < m_size; i++)
+                    m_array[i] = m_array[counter + i];
+            } else {
+                m_size -= counter;
+                m_length -= duration;
+                for (int i = 0; i < m_size; i++)
+                    m_array[i] = m_array[counter + i];
+                m_array[0].m_duration = length - duration;
+            }
+        } else { // удаление с середины
+            int counter_start = 0, length_start = 0;
+            for (int i = 0; i < m_size; i++) {
+                length_start += m_array[i].m_duration;
+                if (length_start > start) {
+                    counter_start = i;
+                    break;
+                }
+            }
+            std::cout << counter_start << " " << length_start << " " << static_cast<int>(m_array[counter_start].m_duration) << std::endl;
 
+            int counter_duration = 0, length_duration = 0;
+            for (int i = 0; i < m_size; i++) {
+                length_duration += m_array[i].m_duration;
+                if (length_duration > duration + start) {
+                    counter_duration = i;
+                    break;
+                }
+            }
+            std::cout << counter_duration << " " << length_duration << " " << static_cast<int>(m_array[counter_duration].m_duration) << std::endl;
 
+            if (m_array[counter_start].m_duration == length_start - start && m_array[counter_duration].m_duration == length_duration - duration - start) {
+                for (int i = counter; i < )
+            }
 
-
-
-
-
-        if (start + duration > m_length)
-            throw std::length_error("Illegal size for binary signal, because duration > m_lght!");
-        int k = 0, q = 0, i;
-        BinarySignal begin, end, tmp = *this;
-        for (i = 0; i < m_size; i++) {
-            k += m_array[i].m_duration;
-            if (k > start - 1)
-                break;
         }
-        tmp.m_size = i + 1;
-        tmp.m_length = start;
-        tmp.m_array[i].m_duration -= k - start;
-        begin = tmp;
-        std::cout << begin;
-        for (i = 0; i < m_size; i++) {
-            q += m_array[i].m_duration;
-            if (q > start + duration - 1)
-                break;
-        }
-        int s = i;
-        if (q == start + duration) {
-            end.m_size = m_size - s - 1;
-            for (i = 0; i < end.m_size; i++)
-                end.m_array[i] = m_array[i + tmp.m_size];
-        } else {
-            end.m_size = m_size - i;
-            for (i = 0; i < end.m_size; i++)
-                end.m_array[i] = m_array[i + s];
-            end.m_array[0].m_duration = q - start - duration;
-        }
-        end.m_length = m_length - begin.m_length - duration;
-        begin.addition(end);
-        *this = begin;
+//        if (start + duration > m_length)
+//            throw std::length_error("Illegal size for binary signal, because duration > m_lght!");
+//        int k = 0, q = 0, i;
+//        BinarySignal begin, end, tmp = *this;
+//        for (i = 0; i < m_size; i++) {
+//            k += m_array[i].m_duration;
+//            if (k > start - 1)
+//                break;
+//        }
+//        tmp.m_size = i + 1;
+//        tmp.m_length = start;
+//        tmp.m_array[i].m_duration -= k - start;
+//        begin = tmp;
+//        std::cout << begin;
+//        for (i = 0; i < m_size; i++) {
+//            q += m_array[i].m_duration;
+//            if (q > start + duration - 1)
+//                break;
+//        }
+//        int s = i;
+//        if (q == start + duration) {
+//            end.m_size = m_size - s - 1;
+//            for (i = 0; i < end.m_size; i++)
+//                end.m_array[i] = m_array[i + tmp.m_size];
+//        } else {
+//            end.m_size = m_size - i;
+//            for (i = 0; i < end.m_size; i++)
+//                end.m_array[i] = m_array[i + s];
+//            end.m_array[0].m_duration = q - start - duration;
+//        }
+//        end.m_length = m_length - begin.m_length - duration;
+//        begin.addition(end);
+//        *this = begin;
     }
 
 

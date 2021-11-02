@@ -4,13 +4,13 @@
 
 
 int main() {
-    bool num1[]{0, 0, 0};
-    BS::BinarySignal bs1(3, num1);
-    std::cout << "BS1: -> " << bs1 << std::endl;
-    bs1.debugging();
+//    bool num1[]{0, 0, 0};
+//    BS::BinarySignal bs1(3, num1);
+//    std::cout << "BS1: -> " << bs1 << std::endl;
+//    bs1.debugging();
 
-    bool num4[]{0, 0, 1, 0, 1, 1};
-    BS::BinarySignal bs4(6, num4);
+    bool num4[]{0, 0, 1, 0, 1, 1, 1, 0, 0, 0};
+    BS::BinarySignal bs4(10, num4);
     std::cout << std::endl << "BS4: -> " << bs4 << std::endl;
     bs4.debugging();
 
@@ -22,8 +22,9 @@ int main() {
 //    std::cin >> bs1 >> bs2 >> a;
 //    std::cout << bs1 << std::endl;
 //    bs1.debugging();
-
-    bs4.insert(1, bs1);
+    std::cout << bs4.getM_LGHT() << std::endl;
+//    bs4.insert(1, bs1);
+    bs4.remove(2, 2);
     std::cout << bs4 << std::endl;
     bs4.debugging();
     return 0;
