@@ -237,7 +237,7 @@ namespace BS {
                     break;
                 }
             }
-            std::cout << counter_start << " " << length_start << " " << static_cast<int>(m_array[counter_start].m_duration) << std::endl;
+//            std::cout << counter_start << " " << length_start << " " << static_cast<int>(m_array[counter_start].m_duration) << std::endl;
 
             int counter_duration = 0, length_duration = 0;
             for (int i = 0; i < m_size; i++) {
@@ -247,12 +247,38 @@ namespace BS {
                     break;
                 }
             }
-            std::cout << counter_duration << " " << length_duration << " " << static_cast<int>(m_array[counter_duration].m_duration) << std::endl;
+//            std::cout << counter_duration << " " << length_duration << " " << static_cast<int>(m_array[counter_duration].m_duration) << std::endl;
 
-            if (m_array[counter_start].m_duration == length_start - start && m_array[counter_duration].m_duration == length_duration - duration - start) {
-                for (int i = counter; i < )
+            if (m_array[counter_start].m_duration == length_start - start && m_array[counter_duration].m_duration == length_duration - duration - start) { // ровное деление
+                for (int i = counter_start; i < counter_start + m_size - counter_duration; i++) {
+                    m_array[i] = m_array[i + counter_duration - counter_start];
+                }
+                m_size = m_size + counter_start - counter_duration;
+                m_length -= duration;
             }
-
+            else if ((m_array[counter_start].m_duration == length_start - start && m_array[counter_duration].m_duration != length_duration - duration - start)) { // последнее - неровное
+                m_array[counter_duration].m_duration = length_duration - duration - start;
+                for (int i = counter_start; i < counter_start + m_size - counter_duration; i++)
+                    m_array[i] = m_array[i + counter_duration - counter_start];
+                m_size = m_size + counter_start - counter_duration;
+                m_length -= duration;
+            }
+            else if ((m_array[counter_start].m_duration != length_start - start && m_array[counter_duration].m_duration == length_duration - duration - start)) { // первое - неровное
+                m_array[counter_start].m_duration = length_start - start;
+                for (int i = counter_start + 1; i < counter_start + m_size - counter_duration + 1; ++i)
+                    m_array[i] = m_array[i + counter_duration - counter_start - 1];
+                m_size = m_size + counter_start - counter_duration + 1;
+                m_length -= duration;
+            }
+            else { // всё неровное
+                std::cout << "asd" << std::endl;
+                m_array[counter_start].m_duration = length_start - start;
+                m_array[counter_duration].m_duration = length_duration - duration - start;
+                for (int i = counter_start + 1; i < counter_start + m_size - counter_duration + 1; i++)
+                    m_array[i] = m_array[i + counter_duration - counter_start - 1];
+                m_size = m_size + counter_start - counter_duration + 1;
+                m_length -= duration;
+            }
         }
 //        if (start + duration > m_length)
 //            throw std::length_error("Illegal size for binary signal, because duration > m_lght!");

@@ -24,7 +24,7 @@ int main() {
 //    bs1.debugging();
     std::cout << bs4.getM_LGHT() << std::endl;
 //    bs4.insert(1, bs1);
-    bs4.remove(2, 2);
+    bs4.remove(1, 5);
     std::cout << bs4 << std::endl;
     bs4.debugging();
     return 0;
