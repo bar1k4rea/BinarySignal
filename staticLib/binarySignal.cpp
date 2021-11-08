@@ -8,7 +8,7 @@ namespace BS {
     }
 
     // Первый конструктор.
-    BinarySignal::BinarySignal(bool lvl) noexcept: m_size(SZ), m_length(MAX), m_array{lvl, MAX} {
+    BinarySignal::BinarySignal(bool lvl) noexcept: m_size(1), m_length(MAX), m_array{lvl, MAX} {
 
     }
 
